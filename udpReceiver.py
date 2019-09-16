@@ -16,6 +16,8 @@ while True:
     buf, address = s.recvfrom(port)
     if not len(buf):
         break
-    print ("Received %s bytes from %s %s: " % (len(buf), address, buf ))
+    print ("Received %s bytes from %s: \n %s " % (len(buf), address, buf.decode("utf-8") ))
+    echo = str(buf.decode("utf-8"))
+    s.sendto(echo.encode('utf-8'), address)
 
 s.shutdown(1)
