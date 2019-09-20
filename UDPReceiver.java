@@ -17,6 +17,8 @@ public class UDPReceiver {
 	      {
 	         // Convert the argument to ensure that is it valid
 	         int port = Integer.parseInt( args[0] ) ;
+	         
+	         InetAddress host = InetAddress.getByName( args[0] ) ;
 
 	         // Construct the socket
 	         DatagramSocket socket = new DatagramSocket( port ) ;
@@ -28,7 +30,11 @@ public class UDPReceiver {
 	            socket.receive( packet ) ;
 
 	            System.out.println( packet.getAddress() + " " + packet.getPort() + ": " + new String(packet.getData()).trim() ) ;
-	        }  
+	            byte [] echoData = ("ACK: " + new String(packet.getData()).trim()).getBytes(); 
+	            DatagramPacket returnPacket = new DatagramPacket( echoData, echoData.length, packet.getAddress(), packet.getPort() ) ;
+	            socket.send( returnPacket );
+	            System.out.println("echo sent.");
+	            }  
 	     }
 	     catch( Exception e )
 	     {
