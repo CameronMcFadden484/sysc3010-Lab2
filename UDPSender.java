@@ -21,15 +21,28 @@ public class UDPSender {
      
 	         Scanner in;
 	         in = new Scanner (System.in);
-	         String message = null;
+	         int Num_messages;
 	         while (true)
 	         {
-	        		 System.out.println("Enter text to be sent, ENTER to quit ");
-	        		 message = in.nextLine();
-	        		 if (message.length()==0) break;
-	        		 byte [] data = message.getBytes() ;
-	        		 DatagramPacket packet = new DatagramPacket( data, data.length, host, port ) ;
-	        		 socket.send( packet ) ;
+	        		 System.out.println("Enter number of messages to be sent, ENTER to send ");
+	        		 Num_messages = Integer.parseInt(in.nextLine());
+	        		 if (Num_messages==0) break;
+	        		 byte [] data = null;
+	        		 
+	        		 for (int n = 0; n < Num_messages; n++) {
+	        			 data = ("message" + n).getBytes();
+	        			 DatagramPacket packet = new DatagramPacket( data, data.length, host, port ) ;
+	        			 socket.send( packet );
+	        			 DatagramPacket echoPacket = new DatagramPacket( new byte[100], 100 ) ;
+	        			 socket.receive( echoPacket );
+	        			 String echoData = new String(echoPacket.getData()).trim();
+	        			 if (echoData.compareTo("ACK: message" + n) == 0) {
+	        				 System.out.println("echo recieved.");
+	        			 } else {
+	        				 System.out.println("No echo.");
+	        			 }
+	        		 }
+	        		 
 	         } 
 	         System.out.println ("Closing down");
 	      }
